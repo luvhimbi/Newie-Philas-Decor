@@ -1,5 +1,5 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
+import { motion } from 'framer-motion';
 import {
   Phone,
   MapPin,
@@ -134,6 +134,7 @@ function SectionHeader({
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pendingSection = useRef<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -142,11 +143,44 @@ function App() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    const value = menuOpen ? 'hidden' : '';
+    document.body.style.overflow = value;
+    document.documentElement.style.overflow = value;
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
   }, [menuOpen]);
 
+  const scrollToSection = useCallback((id: string) => {
+    const target = document.querySelector(`main #${CSS.escape(id)}`);
+    if (!target) return;
+
+    const headerOffset = 80;
+    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    window.history.replaceState(null, '', `#${id}`);
+  }, []);
+
+  useEffect(() => {
+    if (menuOpen || !pendingSection.current) return;
+
+    const id = pendingSection.current;
+    pendingSection.current = null;
+
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+
+    const timer = window.setTimeout(() => scrollToSection(id), 50);
+    return () => window.clearTimeout(timer);
+  }, [menuOpen, scrollToSection]);
+
   const closeMenu = () => setMenuOpen(false);
+
+  const navigateToSection = (href: string) => {
+    pendingSection.current = href.replace('#', '');
+    closeMenu();
+  };
 
   return (
     <>
@@ -171,16 +205,11 @@ function App() {
           </nav>
 
           <div className="header-actions">
-            <a href="tel:0814170801" className="header-cta">
-              <Phone size={14} />
-              <span className="header-cta-full">081 417 0801</span>
-              <span className="header-cta-short">Call Us</span>
-            </a>
-
             <button
               className="menu-toggle"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
             >
               {menuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
@@ -188,42 +217,20 @@ function App() {
         </div>
       </motion.header>
 
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.nav
-            className="mobile-nav open"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            {navLinks.map((link, i) => (
-              <motion.a
-                key={link.href}
-                href={link.href}
-                className="nav-link"
-                onClick={closeMenu}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.06 }}
-              >
-                {link.label}
-              </motion.a>
-            ))}
-            <motion.a
-              href="tel:0814170801"
-              className="btn btn-primary"
-              onClick={closeMenu}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: navLinks.length * 0.06 }}
+      {menuOpen && (
+        <nav className="mobile-nav open" aria-label="Mobile navigation">
+          {navLinks.map((link) => (
+            <button
+              key={link.href}
+              type="button"
+              className="nav-link mobile-nav-link"
+              onClick={() => navigateToSection(link.href)}
             >
-              <Phone size={16} />
-              Call Us
-            </motion.a>
-          </motion.nav>
-        )}
-      </AnimatePresence>
+              {link.label}
+            </button>
+          ))}
+        </nav>
+      )}
 
       <main>
         <section className="hero">

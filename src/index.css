@@ -202,8 +202,14 @@ h1, h2, h3 {
 
 .section {
   padding: 7rem 0;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 700px;
+}
+
+.section[id],
+.about[id],
+.contact-section[id],
+.booking-cta,
+.footer {
+  scroll-margin-top: 5rem;
 }
 
 .section-bg-cream {
@@ -302,7 +308,7 @@ h1, h2, h3 {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 160;
   padding: 1rem 0;
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(10px);
@@ -524,8 +530,6 @@ h1, h2, h3 {
 .about {
   background-color: var(--color-bg-warm);
   padding: 7rem 0;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 900px;
 }
 
 .about-story {
@@ -904,8 +908,6 @@ h1, h2, h3 {
 /* Contact Section */
 .contact-section {
   background-color: var(--color-bg-warm);
-  content-visibility: auto;
-  contain-intrinsic-size: auto 800px;
 }
 
 .contact-grid {
@@ -1253,8 +1255,6 @@ a.contact-card:hover,
 .booking-cta {
   padding: 5rem 0;
   background-color: var(--color-bg-cream);
-  content-visibility: auto;
-  contain-intrinsic-size: auto 260px;
 }
 
 .booking-card {
@@ -1294,8 +1294,6 @@ a.contact-card:hover,
   background-color: var(--color-dark);
   color: #e8e6e3;
   padding: 5rem 0 2rem;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 500px;
 }
 
 .footer-content {
@@ -1398,19 +1396,31 @@ a.contact-card:hover,
   position: fixed;
   inset: 0;
   background: rgba(249, 249, 247, 0.98);
-  z-index: 99;
+  z-index: 150;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2rem;
+  padding: 5rem 1.5rem 2rem;
+  pointer-events: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.mobile-nav .nav-link {
+.mobile-nav .nav-link,
+.mobile-nav-link {
   font-size: 1.1rem;
   font-family: var(--font-display);
   color: var(--color-text);
   letter-spacing: 0.05em;
   text-transform: none;
+  padding: 0.75rem 1.25rem;
+  touch-action: manipulation;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: none;
+  width: auto;
 }
 
 /* Animations */
@@ -1475,20 +1485,6 @@ a.contact-card:hover,
 
   .nav {
     display: none;
-  }
-
-  .header-cta-short {
-    display: inline;
-  }
-
-  .header-cta-full {
-    display: none;
-  }
-
-  .header-cta {
-    padding: 0.45rem 0.875rem;
-    font-size: 0.7rem;
-    white-space: nowrap;
   }
 
   .menu-toggle {
