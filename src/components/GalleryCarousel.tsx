@@ -63,7 +63,8 @@ export default function GalleryCarousel({ images }: GalleryCarouselProps) {
                 src={images[current]}
                 alt={`Decor setup ${current + 1}`}
                 className="carousel-image"
-                loading="lazy"
+                loading={current === 0 ? 'eager' : 'lazy'}
+                fetchPriority={current === 0 ? 'high' : 'auto'}
                 decoding="async"
                 custom={direction}
                 variants={slideVariants}

@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Phone,
   MapPin,
+  Mail,
   Utensils,
   PartyPopper,
   Baby,
@@ -14,56 +15,22 @@ import {
   ArrowRight,
   Clock,
   Info,
-  MessageCircle,
   Target,
   HeartHandshake,
   Star,
   Award,
   UsersRound,
 } from 'lucide-react';
-import GalleryCarousel from './components/GalleryCarousel';
-import FloatingWhatsApp from './components/FloatingWhatsApp';
-import ScrollToTop from './components/ScrollToTop';
-import { FacebookIcon, TikTokIcon } from './components/SocialIcons';
+import LazyGalleryCarousel from './components/LazyGalleryCarousel';
+import { FacebookIcon, TikTokIcon, WhatsAppIcon } from './components/SocialIcons';
 import { FadeUp, MotionItem, Stagger } from './components/motion';
+import { galleryImages } from './data/gallery';
 import { SITE } from './data/site';
 import './index.css';
 
-const galleryImages = [
-  '/469207283_564283862992204_3106401350744891417_n.jpg',
-  '/469231804_564278856326038_1086961304827374702_n.jpg',
-  '/469259440_564285496325374_1182488209133371046_n.jpg',
-  '/469325728_564282722992318_604722613996058945_n.jpg',
-  '/469344896_565512452869345_4233520216232603559_n.jpg',
-  '/469354435_566090226144901_5676921295966620121_n.jpg',
-  '/469357676_564285652992025_206819789307558443_n.jpg',
-  '/469358544_565512252869365_8831836146926286467_n.jpg',
-  '/469399593_566082449479012_2168524733048518792_n.jpg',
-  '/469549257_565512099536047_6408865408968786256_n.jpg',
-  '/469840002_568561872564403_5345761024991478859_n.jpg',
-  '/469845770_568585459228711_4337655302858195448_n.jpg',
-  '/469962135_568562072564383_483692655452309095_n.jpg',
-  '/470555269_574373425316581_9176084575297050817_n.jpg',
-  '/470658687_573584385395485_5341763288042407354_n.jpg',
-  '/470879995_574373465316577_4029426834870299291_n.jpg',
-  '/471139059_574347205319203_5751652373524118764_n.jpg',
-  '/471166450_574347238652533_4221410776714398325_n.jpg',
-  '/471840626_582247354529188_2033451029564125645_n.jpg',
-  '/472022052_582247497862507_5185811782084214503_n.jpg',
-  '/472266135_585147147572542_4390639968109744399_n.jpg',
-  '/472283910_585150127572244_36151267512219310_n.jpg',
-  '/472654430_586310904122833_3772401208126779749_n.jpg',
-  '/472655928_586448724109051_3173433639466498294_n.jpg',
-  '/472684491_585153257571931_6405876209400387559_n.jpg',
-  '/472843362_586310867456170_5846895791838194876_n.jpg',
-  '/473177849_589772287110028_5766100521557004924_n.jpg',
-  '/473349814_590457683708155_6281155300023196748_n.jpg',
-  '/474592189_600453162708607_8757066400316501806_n.jpg',
-  '/474903248_599865946100662_595475587233405175_n.jpg',
-  '/475120112_600446339375956_6747744232227367336_n.jpg',
-  '/475271631_600087446078512_7778708004642364317_n.jpg',
-  '/583111594_756193180772182_7955203168607946303_n.jpg',
-];
+const FloatingWhatsApp = lazy(() => import('./components/FloatingWhatsApp'));
+const ScrollToTop = lazy(() => import('./components/ScrollToTop'));
+const StickyMobileCta = lazy(() => import('./components/StickyMobileCta'));
 
 const services = [
   {
@@ -191,7 +158,7 @@ function App() {
       >
         <div className="container">
           <a href="#" className="logo-container">
-            <img src="/Logo.jpeg" alt="Newie & Phila's Decor Logo" className="logo-img" />
+            <img src={SITE.logo} alt="Newie & Phila's Decor Logo" className="logo-img" width="48" height="48" decoding="async" />
             <div className="header-title">NEWIE & PHILA'S DECOR</div>
           </a>
 
@@ -336,14 +303,38 @@ function App() {
               </div>
               <div className="about-founders">
                 <div className="founder-card">
-                  <span className="founder-name">Ronewa Mahodze</span>
-                  <span className="founder-nickname">"Newie"</span>
-                  <span className="founder-role">Co-Founder</span>
+                  <div className="founder-photo">
+                    <img
+                      src="/founder-ronewa.webp"
+                      alt="Ronewa Mahodze, Co-Founder of Newie & Phila's Decor"
+                      loading="lazy"
+                      decoding="async"
+                      width="280"
+                      height="320"
+                    />
+                  </div>
+                  <div className="founder-info">
+                    <span className="founder-name">Ronewa Mahodze</span>
+                    <span className="founder-nickname">"Newie"</span>
+                    <span className="founder-role">Co-Founder</span>
+                  </div>
                 </div>
                 <div className="founder-card">
-                  <span className="founder-name">Philadaphia Mahodze</span>
-                  <span className="founder-nickname">"Phila"</span>
-                  <span className="founder-role">Co-Founder</span>
+                  <div className="founder-photo">
+                    <img
+                      src="/founder-phila.webp"
+                      alt="Philadaphia Mahodze, Co-Founder of Newie & Phila's Decor"
+                      loading="lazy"
+                      decoding="async"
+                      width="280"
+                      height="320"
+                    />
+                  </div>
+                  <div className="founder-info">
+                    <span className="founder-name">Philadaphia Mahodze</span>
+                    <span className="founder-nickname">"Phila"</span>
+                    <span className="founder-role">Co-Founder</span>
+                  </div>
                 </div>
                 <div className="about-location">
                   <MapPin size={18} />
@@ -404,7 +395,7 @@ function App() {
               subtitle="Browse through our collection of beautifully crafted decor setups for every occasion."
             />
             <FadeUp>
-              <GalleryCarousel images={galleryImages} />
+              <LazyGalleryCarousel images={galleryImages} />
             </FadeUp>
           </div>
         </section>
@@ -449,9 +440,18 @@ function App() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle size={28} className="contact-icon" />
+                <WhatsAppIcon size={28} className="contact-icon" />
                 <h3>WhatsApp</h3>
                 <p>Message us directly</p>
+              </MotionItem>
+              <MotionItem
+                className="contact-card"
+                as="a"
+                href={`mailto:${SITE.email}`}
+              >
+                <Mail size={28} className="contact-icon" />
+                <h3>Email Us</h3>
+                <p>{SITE.email}</p>
               </MotionItem>
               <MotionItem className="contact-card">
                 <MapPin size={28} className="contact-icon" />
@@ -479,7 +479,7 @@ function App() {
             </FadeUp>
             <FadeUp className="contact-cta" delay={0.15}>
               <a href={WHATSAPP_URL} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                <MessageCircle size={16} />
+                <WhatsAppIcon size={16} />
                 Chat on WhatsApp
               </a>
               <a href="tel:0814170801" className="btn btn-outline">
@@ -550,6 +550,14 @@ function App() {
                 <Phone size={18} />
                 <span>066 155 8793</span>
               </a>
+              <a href={`mailto:${SITE.email}`} className="footer-link">
+                <Mail size={18} />
+                <span>{SITE.email}</span>
+              </a>
+              <a href={WHATSAPP_URL} className="footer-link" target="_blank" rel="noopener noreferrer">
+                <WhatsAppIcon size={18} />
+                <span>Chat on WhatsApp</span>
+              </a>
               <a href={SITE.mapsLink} className="footer-link" target="_blank" rel="noopener noreferrer">
                 <MapPin size={18} />
                 <span>{SITE.address}</span>
@@ -574,8 +582,11 @@ function App() {
         </div>
       </motion.footer>
 
-      <FloatingWhatsApp />
-      <ScrollToTop />
+      <Suspense fallback={null}>
+        <FloatingWhatsApp />
+        <ScrollToTop />
+        <StickyMobileCta />
+      </Suspense>
     </>
   );
 }

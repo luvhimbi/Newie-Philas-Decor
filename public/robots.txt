@@ -1,0 +1,28 @@
+# Newie & Phila's Decor
+User-agent: *
+Allow: /
+
+# AI & LLM crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://philasdecor.co.za/sitemap.xml
+
+# LLM-readable site summary
+# https://philasdecor.co.za/llms.txt
+# https://philasdecor.co.za/llms-full.txt

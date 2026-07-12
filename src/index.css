@@ -40,6 +40,34 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Sharper photo rendering across the site */
+.founder-photo img,
+.carousel-image,
+.carousel-thumb img {
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  filter: contrast(1.06) saturate(1.08) brightness(1.02);
+}
+
+@supports (image-rendering: high-quality) {
+  .founder-photo img,
+  .carousel-image,
+  .carousel-thumb img {
+    image-rendering: high-quality;
+  }
+}
+
+.logo-img,
+.splash-logo,
+.footer-logo-img {
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
 /* Splash Screen */
 .splash {
   position: fixed;
@@ -174,6 +202,8 @@ h1, h2, h3 {
 
 .section {
   padding: 7rem 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
 }
 
 .section-bg-cream {
@@ -404,17 +434,21 @@ h1, h2, h3 {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('/hero.png');
+  background-image: url('/hero.webp');
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  filter: contrast(1.05) saturate(1.06) brightness(1.02);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.45) 55%, rgba(245, 243, 239, 0.6) 100%),
-    linear-gradient(to bottom, rgba(249, 249, 247, 0.3) 0%, rgba(255, 255, 255, 0.5) 100%);
+    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.38) 55%, rgba(245, 243, 239, 0.5) 100%),
+    linear-gradient(to bottom, rgba(249, 249, 247, 0.22) 0%, rgba(255, 255, 255, 0.42) 100%);
 }
 
 .hero-content {
@@ -490,6 +524,8 @@ h1, h2, h3 {
 .about {
   background-color: var(--color-bg-warm);
   padding: 7rem 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }
 
 .about-story {
@@ -524,10 +560,31 @@ h1, h2, h3 {
 
 .founder-card {
   background: var(--color-bg);
-  padding: 1.5rem;
   border-radius: var(--radius);
   border: 1px solid rgba(197, 160, 89, 0.25);
   text-align: center;
+  overflow: hidden;
+}
+
+.founder-photo {
+  background: linear-gradient(180deg, #f8f4ed 0%, #ebe4d6 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 200px;
+  padding: 1rem 0.75rem 0;
+}
+
+.founder-photo img {
+  max-height: 240px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.founder-info {
+  padding: 1.25rem 1.5rem 1.5rem;
 }
 
 .founder-name {
@@ -711,6 +768,25 @@ h1, h2, h3 {
   margin: 0 auto;
 }
 
+.carousel-placeholder-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.carousel-placeholder {
+  min-height: 420px;
+  border-radius: var(--radius);
+  background: linear-gradient(110deg, var(--color-bg-warm) 8%, var(--color-bg) 18%, var(--color-bg-warm) 33%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
 .carousel-main {
   position: relative;
   display: flex;
@@ -733,8 +809,9 @@ h1, h2, h3 {
   justify-content: center;
   min-height: 280px;
   max-height: 420px;
-  padding: 0.75rem;
-  background: var(--color-bg-warm);
+  padding: 1rem;
+  background:
+    radial-gradient(circle at center, #ffffff 0%, var(--color-bg-warm) 100%);
   border: 1px solid rgba(197, 160, 89, 0.15);
   position: relative;
   overflow: hidden;
@@ -742,10 +819,11 @@ h1, h2, h3 {
 
 .carousel-image {
   max-width: 100%;
-  max-height: 380px;
+  max-height: 360px;
   width: auto;
   height: auto;
   object-fit: contain;
+  object-position: center;
   display: block;
   border-radius: 2px;
 }
@@ -782,10 +860,10 @@ h1, h2, h3 {
 .carousel-thumb {
   width: 64px;
   height: 64px;
-  padding: 2px;
+  padding: 3px;
   border: 2px solid transparent;
   border-radius: var(--radius);
-  background: var(--color-bg);
+  background: var(--color-bg-warm);
   cursor: pointer;
   overflow: hidden;
   transition: all var(--transition);
@@ -795,9 +873,11 @@ h1, h2, h3 {
 .carousel-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   display: block;
   border-radius: 2px;
+  background: #fff;
 }
 
 .carousel-thumb:hover {
@@ -824,11 +904,13 @@ h1, h2, h3 {
 /* Contact Section */
 .contact-section {
   background-color: var(--color-bg-warm);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
 }
 
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.25rem;
   margin-bottom: 2.5rem;
 }
@@ -882,6 +964,7 @@ a.contact-card:hover,
 .contact-card p {
   color: var(--color-text-muted);
   font-size: 0.95rem;
+  word-break: break-word;
 }
 
 .contact-cta {
@@ -1093,11 +1176,85 @@ a.contact-card:hover,
   opacity: 1;
 }
 
+/* Sticky Mobile CTA Bar */
+.mobile-cta-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-cta-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 198;
+    background: var(--color-bg);
+    border-top: 1px solid rgba(197, 160, 89, 0.25);
+    box-shadow: 0 -4px 20px rgba(44, 44, 44, 0.1);
+    padding: 0.625rem 1rem;
+    padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
+    gap: 0.625rem;
+  }
+
+  .mobile-cta-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: opacity var(--transition);
+  }
+
+  .mobile-cta-phone {
+    background: var(--color-bg-warm);
+    color: var(--color-text);
+    border: 1px solid rgba(197, 160, 89, 0.35);
+  }
+
+  .mobile-cta-phone:active {
+    opacity: 0.85;
+  }
+
+  .mobile-cta-whatsapp {
+    background: #25d366;
+    color: #fff;
+    border: 1px solid #25d366;
+  }
+
+  .mobile-cta-whatsapp:active {
+    opacity: 0.9;
+  }
+
+  .whatsapp-wrap {
+    display: none;
+  }
+
+  body {
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom));
+  }
+
+  .scroll-to-top {
+    bottom: calc(5rem + env(safe-area-inset-bottom));
+    left: 1rem;
+    width: 44px;
+    height: 44px;
+  }
+}
+
 
 /* Booking CTA */
 .booking-cta {
   padding: 5rem 0;
   background-color: var(--color-bg-cream);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 260px;
 }
 
 .booking-card {
@@ -1137,6 +1294,8 @@ a.contact-card:hover,
   background-color: var(--color-dark);
   color: #e8e6e3;
   padding: 5rem 0 2rem;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
 }
 
 .footer-content {
@@ -1376,7 +1535,7 @@ a.contact-card:hover,
   }
 
   .carousel-image {
-    max-height: 280px;
+    max-height: 260px;
   }
 
   .carousel-btn {
@@ -1387,28 +1546,6 @@ a.contact-card:hover,
   .carousel-thumb {
     width: 52px;
     height: 52px;
-  }
-
-  .whatsapp-wrap {
-    bottom: 1.25rem;
-    right: 1.25rem;
-  }
-
-  .whatsapp-float {
-    width: 54px;
-    height: 54px;
-  }
-
-  .whatsapp-preview {
-    max-width: 200px;
-    font-size: 0.8rem;
-  }
-
-  .scroll-to-top {
-    bottom: 1.25rem;
-    left: 1.25rem;
-    width: 44px;
-    height: 44px;
   }
 
   .whatsapp-tooltip {

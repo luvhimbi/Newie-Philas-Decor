@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "compress:images": "node scripts/compress-images.mjs",
+    "build": "npm run compress:images && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -25,8 +26,10 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
+    "sharp": "^0.35.3",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0",
-    "vite": "^8.1.1"
+    "vite": "^8.1.1",
+    "vite-plugin-compression": "^0.5.1"
   }
 }
